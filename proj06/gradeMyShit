@@ -1,0 +1,11 @@
+#!/bin/bash
+tests=$(ls test*)
+rm diffList
+for x in $tests ; do
+  myout=mine_${x}
+  exout=ex_${x}
+ likedList <$x>myout
+ 
+
+
+done

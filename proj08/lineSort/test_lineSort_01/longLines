@@ -1,0 +1,25 @@
+Your second C file - the “utility” file - must include at least the following two
+functions (you can add more if you’d like):
+• char **extendArray(char **oldArray, int oldLen, int newLen)
+This function must allocate a new array using malloc() or calloc(),
+copy the values from the old array into the new one, and then free() the
+old array. It returns the new array (or NULL if there was a malloc failure).
+You are encouraged to look at the man page for realloc() - the standard
+library function which does this - but you are not allowed to use this
+function in this project!
+• void sortArray(char **array, int len)
+This function will sort the array of strings. Strings will be compared using
+strcmp().
+You are free to use any sorting algorithm that you want - even the infamously
+slow Bubble Sort. Of course, if you want to implement a more
+efficient sort - such as Quicksort - you are welcome to!
+You are encouraged to look at the man page for qsort() - the standard
+library function which does this - but you are not allowed to use this
+function in this project!
+NOTE: This function must not allocate or free any memory. Just move
+pointers around - if you find yourself trying to allocate memory, then
+you’re not understanding how it is supposed to work.
+2.4 Input Format
+Your program will read from a series of text files, listed on the command line.
+Each file is a simple text file, with no limitations (other than that it should
+only contain simple ASCII characters). As with the tokenize program, you

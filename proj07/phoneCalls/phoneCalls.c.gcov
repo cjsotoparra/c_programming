@@ -1,0 +1,303 @@
+        -:    0:Source:phoneCalls.c
+        -:    0:Graph:phoneCalls.gcno
+        -:    0:Data:phoneCalls.gcda
+        -:    0:Runs:1
+        -:    0:Programs:1
+        -:    1:/*
+        -:    2:* File: phoneCalls.c
+        -:    3:* Author: Christian Soto
+        -:    4:* Purpose: creates a linked list within a linked list that contain phone who have called eachother.
+        -:    5:*          it also frees the memory after the program is done or exists early.
+        -:    6:*/
+        -:    7:
+        -:    8:#include <stdio.h>
+        -:    9:#include <string.h>
+        -:   10:#include <stdlib.h>
+        -:   11:#include <ctype.h>
+        -:   12:
+        -:   13:
+        -:   14:typedef struct y{
+        -:   15:	int count;
+        -:   16:	struct y *next;
+        -:   17:	char phoneNumberY[9];
+        -:   18:}nodeY;
+        -:   19:
+        -:   20:typedef struct x{
+        -:   21:	struct x *next;
+        -:   22:	struct y *callList;
+        -:   23:	char phoneNumberX[9];
+        -:   24:}nodeX;
+        -:   25:
+       10:   26:nodeY *insertIntoCallList(nodeY *head, char *phone2)
+        -:   27:{
+       10:   28:	nodeY  *cur  =  head;
+       10:   29:        nodeY  **ptrInPrev = &head;
+        -:   30:
+       23:   31:        while (cur != NULL && strcmp(cur->phoneNumberY, phone2) < 0)
+        -:   32:        {
+        3:   33:                ptrInPrev = &cur->next;
+        3:   34:                cur       =  cur->next;
+        -:   35:        }
+        -:   36:
+        -:   37:
+        -:   38:        /* when we get here, either 'cur' is NULL, or cur->name is greater
+        -:   39:         * than or equal to name.  If they are equal, then print an error;
+        -:   40:         * if not, then insert *BEFORE* cur.  Note that it's possible that
+        -:   41:         * 'cur' might be the head of the list, but that won't matter.
+        -:   42:         */
+       10:   43:        if (cur != NULL && strcmp(cur->phoneNumberY, phone2) == 0)
+        -:   44:        {
+        2:   45:                cur->count++;
+        2:   46:                return head;
+        -:   47:        }
+        -:   48:
+        -:   49:
+        -:   50:        /* allocate the node; fill in its fields; then add it to the list */
+        8:   51:        nodeY *newNode = malloc(sizeof(nodeY));
+        8:   52:        if (newNode == NULL)
+        -:   53:        {
+    #####:   54:                perror("Failed to allocate a new node for the linked list");
+    #####:   55:                exit(1);
+        -:   56:        }
+        -:   57:
+        8:   58:        strcpy(newNode->phoneNumberY, phone2);
+        8:   59:	newNode->count = 1;
+        8:   60:        newNode->next = cur;
+        8:   61:        *ptrInPrev = newNode;
+        -:   62:
+        -:   63:        /* if we inserted in the middle, then 'ptrInPrev' was part of a
+        -:   64:         * previous node struct, and so the head hasn't changed.  But if
+        -:   65:         * we inserted at the head, then 'ptrInPrev' actually pointed at our
+        -:   66:         * own 'head' parameter!
+        -:   67:         *
+        -:   68:         * Either way, 'head' still/now contains the head of the updated list.
+        -:   69:         */
+        8:   70:        return head;
+        -:   71:
+        -:   72:}
+        -:   73:
+        -:   74:
+       10:   75:nodeX *insertIntoList(nodeX *head, char *phone, char *phone2){
+        -:   76:	/* search for the correct position.  Note the use of a pointer-pointer
+        -:   77:	 * here to eliminate the need for special-case code dealing with an
+        -:   78:	 * empty list.
+        -:   79:	 */
+        -:   80:
+        -:   81:	/* Style Note:
+        -:   82:	 * -----------
+        -:   83:	 * A pointer-pointer is an unusual but efficient way to implement
+        -:   84:	 * this.  Without a pointer-pointer, you have to cover two cases:
+        -:   85:	 *      - We need to append to the tail (including the case of
+        -:   86:	 *        an empty string)
+        -:   87:	 *      - We need to insert *BEFORE* a node
+        -:   88:	 *
+        -:   89:	 * You thus tend to compare the key value to the key in the *NEXT*
+        -:   90:	 * element, which is a little hard to read.  And worse, you have to
+        -:   91:	 * insert in two ways: sometimes you modify the head, and sometimes
+        -:   92:	 * you don't.
+        -:   93:	 *
+        -:   94:	 * The pointer-pointer eliminates that problem.  The pointer-pointer
+        -:   95:	 * always stores the pointer that we will modify if we insert "here".
+        -:   96:	 * When the loop begins, this actually points to the head pointer -
+        -:   97:	 * meaning that when we insert, we are modifying the head pointer
+        -:   98:	 * directly!  However, as soon as we move into the list, the
+        -:   99:	 * pointer-pointer points to a 'next' field *INSIDE* one of the other
+        -:  100:	 * structs.
+        -:  101:	 *
+        -:  102:	 * In general, 'cur' stores the node we're looking at (which could
+        -:  103:	 * be NULL), and 'ptrInPrev' points at the pointer *VARIABLE* that
+        -:  104:	 * we used to find 'cur'.
+        -:  105:	 */
+        -:  106:
+       10:  107:	nodeX  *cur       =  head;
+       10:  108:	nodeX **ptrInPrev = &head;
+        -:  109:
+       31:  110:	while (cur != NULL && strcmp(cur->phoneNumberX, phone) < 0)
+        -:  111:	{
+       11:  112:		ptrInPrev = &cur->next;
+       11:  113:		cur       =  cur->next;
+        -:  114:	}
+        -:  115:
+        -:  116:
+        -:  117:	/* when we get here, either 'cur' is NULL, or cur->name is greater
+        -:  118:	 * than or equal to name.  If they are equal, then print an error;
+        -:  119:	 * if not, then insert *BEFORE* cur.  Note that it's possible that
+        -:  120:	 * 'cur' might be the head of the list, but that won't matter.
+        -:  121:	 */
+       10:  122:	if (cur != NULL && strcmp(cur->phoneNumberX, phone) == 0)
+        -:  123:	{
+        5:  124:		cur->callList = insertIntoCallList(cur->callList, phone2);
+        5:  125:		return head;
+        -:  126:	}
+        -:  127:
+        -:  128:
+        -:  129:	/* allocate the node; fill in its fields; then add it to the list */
+        5:  130:	nodeX *newNode = malloc(sizeof(nodeX));
+        5:  131:	if (newNode == NULL)
+        -:  132:	{
+    #####:  133:		perror("Failed to allocate a new node for the linked list");
+    #####:  134:		exit(1);
+        -:  135:	}
+        -:  136:
+        5:  137:	strcpy(newNode->phoneNumberX, phone);
+        5:  138:	newNode->callList = insertIntoCallList(newNode->callList, phone2);
+        -:  139:
+        5:  140:	newNode->next = cur;
+        5:  141:	*ptrInPrev = newNode;
+        -:  142:
+        -:  143:	/* if we inserted in the middle, then 'ptrInPrev' was part of a
+        -:  144:	 * previous node struct, and so the head hasn't changed.  But if
+        -:  145:	 * we inserted at the head, then 'ptrInPrev' actually pointed at our
+        -:  146:	 * own 'head' parameter!
+        -:  147:	 *
+        -:  148:	 * Either way, 'head' still/now contains the head of the updated list.
+        -:  149:	 */
+        5:  150:	return head;
+        -:  151:}
+        -:  152:
+        1:  153:void printList(nodeX *head){
+        -:  154:	nodeX *cur;
+        -:  155:	nodeY *cur2;
+        -:  156:
+        -:  157:	/* now, start over from the beginning, and print out all of the
+        -:  158:	 * elements.
+        -:  159:	 */
+        1:  160:	cur = head;
+        7:  161:	while (cur != NULL)
+        -:  162:	{
+        -:  163:		// leading space *BEFORE* each element!
+        5:  164:		printf(" %s:", cur->phoneNumberX);
+        5:  165:		cur2 = cur->callList;
+       18:  166:		while(cur2 != NULL){
+        8:  167:			printf(" %s, %d", cur2->phoneNumberY, cur2->count);
+        8:  168:			cur2 = cur2->next;
+        -:  169:		}
+        -:  170:
+        5:  171:		cur = cur->next;
+        5:  172:		printf("\n");
+        -:  173:	}
+        -:  174:
+        1:  175:	return;
+        -:  176:}
+        -:  177:
+        -:  178:
+        -:  179:
+        -:  180:
+        6:  181:int scanC(char *argV2, char*argV){
+        6:  182:	int status = 0;
+        -:  183:	int i;
+        -:  184:	int len, len2;
+        -:  185:
+        -:  186:	//check the lenght first
+        6:  187:	len = strlen(argV);
+        6:  188:	len2 = strlen(argV2);
+        -:  189:
+        6:  190:	if(len<8 || len2<8){
+    #####:  191:		return 1;
+        -:  192:	}//if statemetn
+        -:  193:
+        -:  194:	//iterate through the first characters to see if they are digits
+       18:  195:	for(i=0; i<2 ; i++){
+       12:  196:		if(!isdigit(argV[i]) || !isdigit(argV2[i])){
+    #####:  197:			return 1;
+        -:  198:		}//if statement
+        -:  199:	}//for loop
+        -:  200:
+        -:  201:	//look for the hyphen
+        6:  202:	if(argV[3] !='-' || argV2[3] != '-'){
+    #####:  203:		return 1;
+        -:  204:	}//if statment
+        -:  205:
+        -:  206:	//look at the rest of the characters to see if they are digits
+       30:  207:	for(i=4 ; i<8 ; i++){
+       24:  208:		if(!isdigit(argV[i]) || !isdigit(argV[i])){
+    #####:  209:			return 1;
+        -:  210:		}//if statement
+        -:  211:	}//for loop
+        -:  212://return the status
+        6:  213:return status;
+        -:  214:}
+        -:  215:
+    #####:  216:int scanList(char p2[], char p[]){
+        -:  217:
+    #####:  218:	int status = 0;
+        -:  219:
+        -:  220:
+        -:  221:
+    #####:  222:return status;
+        -:  223:}
+        -:  224:
+        1:  225:int main (int argC, char *argV[]){
+        -:  226:	FILE *fp;
+        -:  227:	int index;
+        -:  228:	int ret;
+        1:  229:	int status =0;
+        1:  230:	nodeX *head = NULL;
+        -:  231:
+        -:  232:	//Need at least 1 file to begin program and two numbers
+        1:  233:	if(argC < 4){
+    #####:  234:		fprintf(stderr, "Usage: %s file\n", argV[0]);
+    #####:  235:		exit(1);
+        -:  236:	}//if statemtn
+        -:  237:
+        -:  238:	//need two different phone numbers
+        1:  239:	if(strcmp(argV[argC-1],argV[argC-2]) ==0){
+    #####:  240:		fprintf(stderr, "Can't use same numbers\n");
+    #####:  241:		exit(1);
+        -:  242:	}//ifs tatment
+        -:  243:
+        -:  244:	//check to see if both numbers are valid
+        1:  245:	ret = scanC(argV[argC-2], argV[argC-1]);
+        1:  246:	if(ret==1){
+    #####:  247:		fprintf(stderr, "Last two numbers not valid\n");
+    #####:  248:		exit(1);
+        -:  249:	}//if statement
+        -:  250:
+        -:  251:
+        -:  252:
+        -:  253:	//iterate and open files and read from it
+        3:  254:	for(index=1; index<argC-2; index++){
+        -:  255:
+        2:  256:			fp = fopen(argV[index],"r");
+        -:  257:			//error check
+        2:  258:			if(fp == NULL){
+        1:  259:				fprintf(stderr,"Counld not open file %s\n", argV[index]);
+        1:  260:				status=1;
+        1:  261:				continue;
+        -:  262:			}//if statment
+        -:  263:
+        -:  264:			//read from file using fcanf
+        -:  265:
+        -:  266:				//char *line = NULL;
+        -:  267:
+        -:  268:				char p2[9];
+        -:  269:				char p[9];
+        -:  270:
+        -:  271:				//scan the strings of the file into str array
+        7:  272:				while( fscanf(fp, "%8s %8s", p, p2) != EOF){
+        -:  273:
+        -:  274:					//check to see if both numbers are valid again
+        5:  275:					ret = scanC( p, p2);
+        5:  276:					if(ret==1){
+    #####:  277:						fprintf(stderr, "one of the numbers is not valid\n");
+    #####:  278:						exit(1);
+        -:  279:					}//if statement
+        -:  280:
+        5:  281:					if(strcmp(p2, p)==0){
+    #####:  282:						fprintf(stderr, "Two numbers can't call each other\n");
+    #####:  283:						status =1;
+        -:  284:					}//if statement
+        -:  285:
+        -:  286:					//check to see if the list already contains the phonenumbers
+        5:  287:					head = insertIntoList(head, p, p2);
+        5:  288:					head = insertIntoList(head, p2, p);
+        -:  289:				}//while loop 2
+        -:  290:
+        -:  291:			//close the file for it is not needed to be open anymore
+        1:  292:			 fclose(fp);
+        -:  293:	}//for  looop
+        -:  294:
+        1:  295:printList(head);
+        -:  296:
+        1:  297:return status;
+        -:  298:}

@@ -1,0 +1,6 @@
+	-command to make give
+
+hello: dep1 dep2
+	-command to make hello
+
+

@@ -1,0 +1,55 @@
+The file 'emptyFile' had 0 lines.
+The file 'longLines' had 25 lines.
+2.4 Input Format
+Each file is a simple text file, with no limitations (other than that it should
+NOTE: This function must not allocate or free any memory. Just move
+This function must allocate a new array using malloc() or calloc(),
+This function will sort the array of strings. Strings will be compared using
+You are encouraged to look at the man page for qsort() - the standard
+You are encouraged to look at the man page for realloc() - the standard
+You are free to use any sorting algorithm that you want - even the infamously
+Your program will read from a series of text files, listed on the command line.
+Your second C file - the “utility” file - must include at least the following two
+copy the values from the old array into the new one, and then free() the
+efficient sort - such as Quicksort - you are welcome to!
+function in this project!
+function in this project!
+functions (you can add more if you’d like):
+library function which does this - but you are not allowed to use this
+library function which does this - but you are not allowed to use this
+old array. It returns the new array (or NULL if there was a malloc failure).
+only contain simple ASCII characters). As with the tokenize program, you
+pointers around - if you find yourself trying to allocate memory, then
+slow Bubble Sort. Of course, if you want to implement a more
+strcmp().
+you’re not understanding how it is supposed to work.
+• char **extendArray(char **oldArray, int oldLen, int newLen)
+• void sortArray(char **array, int len)
+The file 'longlines2' had 21 lines.
+0
+1
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+2
+20
+3
+4
+5
+6
+7
+8
+9
+The file 'nan' had 4 lines.
+
+111111111
+235
+hello darkeness my old friend
+The file '1234' did not exist.
